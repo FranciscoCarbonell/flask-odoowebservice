@@ -3,7 +3,7 @@ from setuptools import setup,find_packages
 setup(
     name='flask_odoowebservice',
     version='1.0',
-    url='https://github.com/FranciscoCarbonell/flask-mongokat',
+    url='https://github.com/FranciscoCarbonell/flask-odoowebservice',
     license='MIT',
     author='Francisco Carbonell',
     author_email='francabezo@gmail.com',
