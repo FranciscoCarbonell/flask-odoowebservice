@@ -12,5 +12,5 @@ setup(
     zip_safe=False,
     include_package_data=True,
     platforms='any',
-    install_requires=['Flask','pymongo','mongokat','flask-mongokat']
+    install_requires=['Flask','pymongo','mongokat','flask-mongokat','flask-jwt-extended']
 )
