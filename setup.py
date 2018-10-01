@@ -2,7 +2,7 @@ from setuptools import setup,find_packages
 
 setup(
     name='flask_odoowebservice',
-    version='1.0',
+    version='1.01',
     url='https://github.com/FranciscoCarbonell/flask-odoowebservice',
     license='MIT',
     author='Francisco Carbonell',
