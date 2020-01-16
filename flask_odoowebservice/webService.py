@@ -51,5 +51,5 @@ class OdooWebServiceClient(object):
     def init_app(self,app):
         app.config.setdefault('ODOO_URL','http://localhost')
         app.config.setdefault('ODOO_PORT', '8069')
-        app.config.setdefault('ODOO_DB', 'odoo8db')
+        app.config.setdefault('ODOO_DB', 'odootest')
         self.url = app.config['ODOO_URL'] + ':' + app.config['ODOO_PORT']

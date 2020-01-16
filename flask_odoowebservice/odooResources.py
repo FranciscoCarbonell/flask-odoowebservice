@@ -1,15 +1,23 @@
-from flask_restful import Resource,Api
-from flask import request,jsonify,make_response
+from flask_restplus import Resource, Api
+from flask import request,jsonify,make_response, g
 from .webService import OdooWebServiceClient
 from ast import literal_eval
 from base64 import b64decode
 from flask_jwt_extended import create_access_token,\
 jwt_refresh_token_required,jwt_required,get_jwt_identity,get_jwt_claims,JWTManager
+from flask_httpauth import HTTPBasicAuth
 from .database import UsersCollection
 
+auth = HTTPBasicAuth()
 
 OdooApi = Api()
 JWT = JWTManager()
+
+class User:
+    def __init__(self, username, password, uid):
+        self.username = username
+        self.password = password
+        self.uid = uid
 
 class OdooWebServiceResources(OdooWebServiceClient):
     def init_app(self,app):
@@ -17,6 +25,7 @@ class OdooWebServiceResources(OdooWebServiceClient):
             self.app = app
         JWT.init_app(app)
         OdooWebServiceClient.init_app(self,app)
+        OdooApi.init_app(self.app)
     def add_resource(self,obj,route):
         OdooApi.add_resource(obj,route)
 
@@ -25,12 +34,27 @@ class OdooWebServiceResources(OdooWebServiceClient):
 
 webClient = OdooWebServiceResources()
 
+@auth.verify_password
+def verify_password(username, password):
+    print(username)
+    print(password)
+    uid = webClient.get_uid(username,password)
+    if uid != None:
+        user = User(username, password, uid)
+        g.user = user
+        return True
+    return False
+
 @JWT.user_identity_loader
-def user_identity_lookup(username):
-    user_collection = UsersCollection()
-    _user = user_collection.find_one({'name':username})
-    credential = {'uid':_user['uid'],'password':_user['password']}
-    return credential
+def user_identity_lookup(user):
+    return user.username
+
+@JWT.user_claims_loader
+def user_claims_loader(user):
+    return {
+        "uid": user.uid,
+        "password": user.password
+    }
 
 class OdooBaseResource(Resource):
     decorators = [jwt_required]
@@ -60,7 +84,8 @@ class OdooListResource(OdooBaseResource):
     def list(self,module):
         self.set_domain()
         credential = get_jwt_identity()
-        uid,password = credential['uid'],credential['password']
+        claims = get_jwt_claims()
+        uid,password = claims['uid'],claims['password']
         response = webClient.search_read(uid=uid,password=password,module=module,\
                         domain=self.domain,fields=self.fields)
 
@@ -89,6 +114,14 @@ class OdooAttributes(Resource):
         uid, password = credential['uid'], credential['password']
         response = webClient.get_attribute(uid,password,module)
         return jsonify(data=response)
+
+class OdooAuth(Resource):
+
+    @auth.login_required
+    def post(self):
+        print(g.user)
+        token = create_access_token(identity=g.user)
+        return {"access_token": token}
 
 class OdooAuthResource(Resource):
 

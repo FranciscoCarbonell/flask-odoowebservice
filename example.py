@@ -1,11 +1,9 @@
-from flask import Flask,make_response,current_app
+from flask import Flask
 from flask_odoowebservice.odooResources import OdooListResource,OdooRetrieveResource,\
-OdooDeleteResource,OdooAttributes,OdooAuthResource,webClient
-from flask_mongokat import MongokatApp
+OdooDeleteResource, OdooAttributes, webClient, OdooAuth, OdooApi
 
 app = Flask(__name__)
 app.config.from_object('config.Developement')
-mongoapp = MongokatApp(app)
 
 webClient.init_app(app)
 
@@ -25,8 +23,6 @@ webClient.add_resource(Odoo,'/<module>/')
 webClient.add_resource(OdooRetrieve,'/<module>/<int:pk>/')
 webClient.add_resource(OdooDelete,'/delete/<module>/<int:pk>/')
 webClient.add_resource(Attributes,'/<module>/attributes/')
-webClient.add_resource(OdooAuthResource,'/auth/')
+OdooApi.add_resource(OdooAuth,'/auth/')
 
-webClient.init_routes()
-
-app.run('localhost',port=8000)
+app.run('0.0.0.0',port=8000)
