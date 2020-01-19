@@ -6,7 +6,6 @@ from base64 import b64decode
 from flask_jwt_extended import create_access_token,\
 jwt_refresh_token_required,jwt_required,get_jwt_identity,get_jwt_claims,JWTManager
 from flask_httpauth import HTTPBasicAuth
-from .database import UsersCollection
 
 auth = HTTPBasicAuth()
 

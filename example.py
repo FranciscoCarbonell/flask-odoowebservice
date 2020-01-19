@@ -23,6 +23,6 @@ webClient.add_resource(Odoo,'/<module>/')
 webClient.add_resource(OdooRetrieve,'/<module>/<int:pk>/')
 webClient.add_resource(OdooDelete,'/delete/<module>/<int:pk>/')
 webClient.add_resource(Attributes,'/<module>/attributes/')
-OdooApi.add_resource(OdooAuth,'/auth/')
+webClient.add_resource(OdooAuth,'/auth/')
 
 app.run('0.0.0.0',port=8000)
