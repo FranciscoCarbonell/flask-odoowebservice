@@ -32,7 +32,7 @@ ODOO_DB - default: odoo8db
 
 from flask import Flask
 from flask_odoowebservice.odooResources import OdooListResource,OdooRetrieveResource,\
-OdooDeleteResource, OdooAttributes, webClient, OdooAuth, OdooApi
+OdooDeleteResource, OdooAttributes, webClient, OdooAuth
 
 app = Flask(__name__)
 app.config.from_object('config.Developement')
@@ -55,7 +55,7 @@ webClient.add_resource(Odoo,'/<module>/')
 webClient.add_resource(OdooRetrieve,'/<module>/<int:pk>/')
 webClient.add_resource(OdooDelete,'/delete/<module>/<int:pk>/')
 webClient.add_resource(Attributes,'/<module>/attributes/')
-OdooApi.add_resource(OdooAuth,'/auth/')
+webClient.add_resource(OdooAuth,'/auth/')
 
 app.run('0.0.0.0',port=8000)
 
