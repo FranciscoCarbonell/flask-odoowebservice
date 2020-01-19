@@ -28,9 +28,6 @@ class OdooWebServiceResources(OdooWebServiceClient):
     def add_resource(self,obj,route):
         OdooApi.add_resource(obj,route)
 
-    def init_routes(self):
-        OdooApi.init_app(self.app)
-
 webClient = OdooWebServiceResources()
 
 @auth.verify_password
